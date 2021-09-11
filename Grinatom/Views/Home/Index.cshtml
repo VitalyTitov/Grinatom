@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Grinatom.Models.User>
+@{
+    ViewBag.Title = "Все пользователи";
+}
+<a asp-action="Create">Добавить пользователя</a>
+<table class="table">
+    <tr><td>Табельный номер</td><td>ФИО</td></tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Timesheet</td>
+            <td><pre>@item.FirstName @item.LastName @item.Patronymic</pre></td>
+            <td>
+                <a asp-action="Report" asp-controller="Home" asp-route-id="@item.Id">Отчет</a>
+                <a asp-action="Edit" asp-controller="Home" asp-route-id="@item.Id">Изменить</a>
+                <a asp-action="Delete" asp-controller="Home" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+    }
+</table>

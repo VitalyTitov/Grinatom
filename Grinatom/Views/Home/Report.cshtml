@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Grinatom.Models.DailyReport>
+@{
+    ViewBag.Title = "Вывод отчетов";
+}
+<table class="table">
+    <tr><td>Табельный номер</td><td>ФИО</td><td>Дата</td><td>Рабочие Часы</td></tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Timesheet</td>
+            <td>@item.Name</td>
+            <td>@item.Date</td>
+            <td>@item.Hours</td>
+        </tr>
+    }
+</table>

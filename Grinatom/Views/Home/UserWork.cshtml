@@ -1,0 +1,76 @@
+﻿@model Grinatom.Models.User
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Рабочий процесс</title>
+</head>
+<body>
+    <div id="Start">
+        <input type="submit" id="getStart" value="Приступил к работе" />
+    </div>
+    <div id="End" style="display:none;">
+        <input type="submit" id="getEnd" value="Завершил работу" />
+    </div>
+    <input type="hidden"  id="ReportId" />
+    <script>
+
+        // отправка запроса к контроллеру Home
+        async function getData(url) {
+            const formData = new FormData();
+            formData.append("userId", @Model.Id);
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json"
+                }, body: formData
+            });
+            // получаем данные
+            const data = await response.json();
+            if (response.ok === true) {
+                document.getElementById("Start").style.display = "none";
+                document.getElementById("End").style.display = "block";
+                document.getElementById("ReportId").value = data;
+                alert("Вы начали работу!")
+            }
+            else
+                console.log("Status: ", response.status);
+        };
+
+        // кнопка начала работы 
+        document.getElementById("getStart").addEventListener("click", e => {
+            e.preventDefault();
+            getData("/getReport");
+        });
+
+        // отправка запроса к контроллеру Home
+        async function getDataEnd(url) {
+            const formData = new FormData();
+            formData.append("reportId", document.getElementById("ReportId").value);
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json"
+                }, body: formData
+            });
+            // получаем данные
+            const data = await response.json();
+            if (response.ok === true) {
+                document.getElementById("End").style.display = "none";
+                document.getElementById("Start").style.display = "block";
+                alert("Вы закончили работу!")
+            }
+            else
+                console.log("Status: ", response.status);
+        };
+
+        // кнопка конца работы
+        document.getElementById("getEnd").addEventListener("click", e => {
+            e.preventDefault();
+            getDataEnd("/getReportEnd");
+        });
+
+    </script>
+</body>
+</html>

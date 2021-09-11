@@ -1,0 +1,41 @@
+﻿@model Grinatom.Models.User
+@{
+    ViewBag.Title = "Добавление пользователя";
+}
+<form asp-action="create" asp-controller="home">
+    <div class="form-group">
+        <label asp-for="Email" class="control-label">Email</label>
+        <input type="text" asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="control-label">Пароль</label>
+        <input type="text" asp-for="Password" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="FirstName" class="control-label">Имя</label>
+        <input type="text" asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName" class="control-label">Фамилия</label>
+        <input type="text" asp-for="LastName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Patronymic" class="control-label">Отчество</label>
+        <input type="text" asp-for="Patronymic" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Position" class="control-label">Должность</label>
+        <input type="text" asp-for="Position" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Timesheet" class="control-label">Табель</label>
+        <input type="number" asp-for="Timesheet" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="RoleId" class="control-label">Роль (1 admin, 2 user)</label>
+        <input type="number" asp-for="RoleId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Сохранить" class="btn btn-default" />
+    </div>
+</form>
