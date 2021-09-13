@@ -47,44 +47,48 @@ namespace Grinatom.Controllers
         {
             if (id != null)
             {
-                var reports =  db.Reports.Where(p => p.UserId == id);
-                string time = "";
-                IQueryable<Report> datareport = Enumerable.Empty<Report>().AsQueryable();             
-                IQueryable<DailyReport>  daily = Enumerable.Empty<DailyReport>().AsQueryable();
+                bool last = false;
                 TimeSpan timeSpan = new TimeSpan();
-                int count = reports.Count();
-                //создание массива записей для отчета
-                foreach (var item in reports)
+                var reports =  db.Reports.Where(p => p.UserId == id);
+                IQueryable<DailyReport> daily = Enumerable.Empty<DailyReport>().AsQueryable();                
+                //список дат
+                var dataReport = reports
+                          .Select(i => i.Date)
+                          .Distinct()
+                          .ToList();                
+                
+                //создание списка репортов для выбранного пользователя
+                for (int i = 0; i < dataReport.Count(); i++)
                 {
-                    count--;
-                    if (time == "" || time == item.Date)
+                    int count = reports.Count();
+                    foreach (var item in reports)
                     {
-                        datareport = datareport.Concat(new[] { item });
-                    }
-                    else
-                    { 
-                        foreach(var item1 in datareport)
+                        count--;
+                        if (item.Date == dataReport.ElementAt(i))
                         {
-                            timeSpan += item1.EndTime - item1.StartTime;
+                            timeSpan += item.EndTime - item.StartTime;
+                            last = true;
                         }
-                        var output = timeSpan.ToString(@"hh\:mm\:ss");
-                        DailyReport dailyR = new DailyReport{ Name = item.Name, Date = item.Date, Hours = output, Timesheet = item.Timesheet };
-                        daily = daily.Concat(new[] { dailyR });
-                        timeSpan = TimeSpan.Zero;
-                    }
-                    if(count <= 0) 
-                    {
-                        foreach (var item1 in datareport)
+                        else if (last == true) 
                         {
-                            timeSpan += item1.EndTime - item1.StartTime;
+                            var output = timeSpan.ToString(@"hh\:mm\:ss");
+                            DailyReport dailyR = new DailyReport { Name = item.Name, Date = dataReport.ElementAt(i), Hours = output, Timesheet = item.Timesheet };
+                            daily = daily.Concat(new[] { dailyR });
+                            timeSpan = TimeSpan.Zero;
+                            last = false;
                         }
-                        var output1 = timeSpan.ToString(@"hh\:mm\:ss");
-                        DailyReport dailyR = new DailyReport { Name = item.Name, Date = item.Date, Hours = output1, Timesheet = item.Timesheet };
-                        daily = daily.Concat(new[] { dailyR });
-                        timeSpan = TimeSpan.Zero;
-                    };
+
+                        if (count ==0 && i == dataReport.Count() - 1)
+                        {
+                            var output = timeSpan.ToString(@"hh\:mm\:ss");
+                            DailyReport dailyR = new DailyReport { Name = item.Name, Date = dataReport.ElementAt(i), Hours = output, Timesheet = item.Timesheet };
+                            daily = daily.Concat(new[] { dailyR });
+                            timeSpan = TimeSpan.Zero;
+                            last = false;
+                        }
+                    }                    
                 }
-                time = "";
+
                 if (daily != null)
                     return View(daily);
             }
